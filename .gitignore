@@ -1,0 +1,42 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+ENV/
+
+# --- Environment ---
+.env
+*.env
+
+# --- Data ---
+data/*.bin
+data/*.mat
+data/output/
+data/processed/
+data/*.csv
+!data/.gitkeep
+
+# --- Test / notebook artifacts ---
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+
+# --- Trained model artifacts ---
+models/*.pkl
+models/*.csv
+models/threshold.txt
+!models/.gitkeep
