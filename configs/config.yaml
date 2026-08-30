@@ -1,0 +1,25 @@
+signal_source:
+  type: "file"  # "file" for development/testing, "usrp" once hardware is available
+  file_path: "data/output/texbat_ds2_channel_labeled.csv"
+  usrp_args:
+    sample_rate: 25000000
+    center_freq: 1575420000  # GPS L1 frequency
+    gain: 40
+
+feature_engineering:
+  rolling_window: 10
+
+detection_model:
+  threshold_percentile: 20
+  model_dir: "models"
+
+switching_logic:
+  hysteresis_window: 5
+
+pnt_engine:
+  method: "tdoa"  # "tdoa" or "trilateration"
+  min_stations: 4
+
+network_source:
+  type: "mock"  # "mock" for now, "real" once physical stations exist
+  station_coords: [[0, 0], [100, 0], [50, 100], [0, 100]]

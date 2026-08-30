@@ -1,0 +1,5 @@
+device_args: "type=b200"     # depends on specific USRP model
+sample_rate: 25000000
+center_freq: 1575420000      
+gain: 40
+antenna: "TX/RX"
