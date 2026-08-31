@@ -1,5 +1,7 @@
 # AI-Network-PNT-Assistant
 
+![CI](https://github.com/YOUR_USERNAME/AI-PNT-Assistant/actions/workflows/ci.yml/badge.svg)
+
 An AI-based system for detecting GPS spoofing attacks and falling back to network-based
 Positioning, Navigation & Timing (PNT) when GPS readings are compromised.
 
