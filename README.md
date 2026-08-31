@@ -20,6 +20,7 @@ Positioning, Navigation & Timing (PNT) when GPS readings are compromised.
 - [Getting Started](#getting-started)
 - [Testing](#testing)
 - [References](#references)
+- [License](#license)
 
 ---
 
@@ -267,6 +268,10 @@ was independently verified with a synthetic test recovering a known position to 
 
 ```
 AI-Network-PNT-Assistant/
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+|
 ├── configs/
 │   ├── config.yaml                  # main configuration (signal source, model, switching, PNT)
 │   └── usrp_config.yaml             # USRP hardware settings (placeholder until hardware available)
@@ -319,7 +324,9 @@ AI-Network-PNT-Assistant/
 │       └── kalman_filter.py
 │
 ├── tests/
-├── main.py                          # end-to-end entry point
+├── LICENSE
+├── main.py 
+├── README.md                   
 └── requirements.txt
 ```
 
@@ -377,3 +384,14 @@ python -m tests.test_full_pipeline_on_texbat
   Austin Radionavigation Laboratory
 - GNSS-SDR — open-source GNSS software-defined receiver, [gnss-sdr.org](https://gnss-sdr.org)
 - scikit-learn IsolationForest documentation
+
+---
+
+## License
+
+This project's source code is licensed under the MIT License (see [LICENSE](LICENSE)).
+
+Note: the TEXBAT dataset used for training/evaluation is subject to its own usage terms
+from the University of Texas at Austin Radionavigation Laboratory, and is not included
+in this repository. Refer to the [official TEXBAT page](https://radionavlab.ae.utexas.edu/texbat/)
+for access and usage conditions. 
