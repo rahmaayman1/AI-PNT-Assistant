@@ -12,6 +12,7 @@ Positioning, Navigation & Timing (PNT) when GPS readings are compromised.
 - [Overview](#overview)
 - [System Architecture](#system-architecture)
 - [Dataset](#dataset)
+- [Multi-Source PNT Fusion](#multi-source-pnt-fusion)
 - [Detection Model](#detection-model)
 - [Model Development Journey](#model-development-journey)
 - [Results](#results)
@@ -141,6 +142,51 @@ and Doppler shift, rather than relying on the receiver's own internal spoofing-d
 supplementary detection layer, which is the core motivation for this project.
 
 ---
+
+## Multi-Source PNT Fusion
+
+Beyond GPS-vs-network switching, the system supports fusing position estimates from
+multiple independent sources, each weighted by a confidence score, using a Kalman
+filter (`src/pnt_engine/fusion.py`). This extends the binary switching logic to a
+graceful, weighted combination of whatever sources are available at a given moment.
+
+### Sources
+
+| Source | Status | Confidence basis |
+|---|---|---|
+| GPS | Implemented | AI anomaly detector's confidence score (`model.confidence_score()`) |
+| Ground network TDOA | Mock (`mock_station_source.py`) | Fixed placeholder |
+| 5G UL-TDOA | Mock, calibrated against real dataset | See below |
+
+### 5G positioning source
+
+5G-based positioning is modeled after **EURECOM's 5G-SRS dataset** (Ahadi et al.,
+IEEE Dataport, 2025), a real UL-TDOA testbed using 2 Radio Units (8 directional
+antennas total) at EURECOM campus, with RTK-GPS ground truth.
+
+**Scope note:** per project guidance, the dataset's raw Channel Impulse Response
+(CIR) files are not processed directly — this would require specialized 5G
+physical-layer tooling (OpenAirInterface/srsRAN) beyond the current project's
+scope. Instead, the real antenna coordinates and RTK ground-truth positions
+(`local_x`, `local_y`) from the dataset are used to compute geometrically realistic
+TDOA measurements, which are then fed into the same `tdoa.py` solver used
+elsewhere in the project. This validates the TDOA math against real-world antenna
+geometry and a real recorded trajectory, without requiring raw-signal processing.
+
+Full integration with the dataset's raw CIR data is documented as future work,
+consistent with the project's approach to other hardware-dependent components
+(USRP, real ground stations).
+
+### Fusion approach
+
+Each source contributes a position estimate and a confidence score. Confidence is
+converted to Kalman filter measurement noise (lower confidence → higher noise →
+less influence on the fused result), so a source suspected of spoofing still
+contributes but is automatically down-weighted rather than being hard-switched
+off entirely.
+
+---
+
 
 ## Detection Model
 
@@ -296,7 +342,10 @@ AI-Network-PNT-Assistant/
 │   ├── network_acquisition/         # network station timing source (mock today, real later)
 │   │   ├── mock_station_source.py
 │   │   ├── real_station_source.py   # placeholder - requires physical stations
-│   │   └── station_source_factory.py
+│   │   ├── station_source_factory.py
+│   │   ├── mock_5g_source.py        # calibrated against EURECOM 5G-SRS dataset
+│   │   ├── real_5g_source.py        # placeholder - full raw CIR integration (future work)
+│   │   └── five_g_source_factory.py
 │   │
 │   ├── gnss_processing/             # raw IQ -> observables (GNSS-SDR integration)
 │   │   ├── gnss_sdr_config/
@@ -321,7 +370,8 @@ AI-Network-PNT-Assistant/
 │   └── pnt_engine/
 │       ├── tdoa.py                  # verified against synthetic ground truth (0.0 m error)
 │       ├── trilateration.py
-│       └── kalman_filter.py
+│       ├── kalman_filter.py
+│       └── fusion.py               # multi-source weighted fusion (Kalman-based)
 │
 ├── tests/
 ├── LICENSE
@@ -365,6 +415,9 @@ python -m tests.test_with_recorded_file
 
 # Integration check: scenario-specific reproduction of notebook's ds2 result (recall = 1.00)
 python -m tests.test_full_pipeline_on_texbat
+
+# Unit test: multi-source fusion correctly weights sources by confidence
+python -m tests.test_fusion
 ```
 
 > **Note on `test_with_recorded_file.py`:** this test evaluates the trained model on the same
@@ -384,7 +437,9 @@ python -m tests.test_full_pipeline_on_texbat
   Austin Radionavigation Laboratory
 - GNSS-SDR — open-source GNSS software-defined receiver, [gnss-sdr.org](https://gnss-sdr.org)
 - scikit-learn IsolationForest documentation
-
+- Ahadi, M., Kaltenberger, F., Esrafilian, O., & Malik, A. — EURECOM 5G SRS Dataset,
+  IEEE Dataport, 2025, doi:10.21227/t8ya-z141
+  
 ---
 
 ## License
