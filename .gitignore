@@ -36,7 +36,7 @@ htmlcov/
 **/.ipynb_checkpoints/
 
 # --- Trained model artifacts ---
-models/*.pkl
-models/*.csv
-models/threshold.txt
-!models/.gitkeep
+#models/*.pkl
+#models/*.csv
+#models/threshold.txt
+#!models/.gitkeep
