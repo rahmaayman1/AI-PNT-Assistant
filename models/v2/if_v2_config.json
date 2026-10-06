@@ -1,0 +1,20 @@
+{
+  "features": [
+    "z_roll_mean_5",
+    "z_roll_mean_25",
+    "z_roll_mean_50"
+  ],
+  "windows": [
+    5,
+    25,
+    50
+  ],
+  "std_floor": 0.5,
+  "target_fpr": 0.05,
+  "threshold": -0.15510931099772496,
+  "baseline_scenario": "cleanStatic",
+  "calibration_scenarios": [
+    "ds2",
+    "ds3"
+  ]
+}
