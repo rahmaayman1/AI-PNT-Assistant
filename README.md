@@ -361,8 +361,9 @@ AI-Network-PNT-Assistant/
 |       `-- if_v2_config.json
 |
 |-- notebooks/
-|   |-- Network_PNT.ipynb            # v1 development history
-|   |-- Network_v2.ipynb             # v2: leakage-free re-evaluation, experiments, frozen model, final test
+|   |--spoofing_onset_analysis.ipynb
+|   |-- Network_v1.ipynb            # v1 development history
+|   |-- v2_cn0_detection.ipynb             # v2: leakage-free re-evaluation, experiments, frozen model, final test
 |   `-- 03_v3_improvements.ipynb     # v3 experiments (work in progress)
 |
 |-- src/
